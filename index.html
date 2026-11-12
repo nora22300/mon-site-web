@@ -776,7 +776,10 @@ body::selection{background:var(--purple);color:#fff}
         <div class="hero-actions"><a class="btn dark" href="#projets">Voir mes projets ↘</a><a class="btn light" href="img/Group 301.pdf" target="_blank" rel="noopener">Mon CV ↗</a></div>
         <div class="availability"><span class="dot"></span> Recherche stage / alternance en communication</div>
       </div>
-      
+      <div class="hero-card">
+        <img src="img/129_3301.jpeg" alt="Portrait de Nora">
+        <span class="sticker">Créative<br> & curieuse</span>
+      </div>
     </div>
   </section>
 <section class="section reveal" aria-label="Présentation">
@@ -849,7 +852,7 @@ body::selection{background:var(--purple);color:#fff}
             </article>
             <article class="project" tabindex="0" role="button" data-project="novacook" data-cat="audio com">
               <div class="project-media novacook-project-media novacook-photo-slot" aria-label="Emplacement de la photo du projet NovaCook">
-                <img src="img/mixeur2.HEIC" alt="Photo du projet NovaCook à ajouter" onerror="this.style.display='none'">
+                <img src="img/mixeur2.jpg" alt="Photo du projet NovaCook à ajouter" onerror="this.style.display='none'">
                 <span class="novacook-photo-hint">PHOTO À AJOUTER</span>
               </div>
               <div class="project-body"><div class="project-meta"><span>Audiovisuel</span><span>05</span></div><h3>Le goût du premier rendez-vous</h3><p>Campagne publicitaire imaginée autour du mixeur NovaCook.</p><div class="project-tags"><span class="tag">Publicité</span><span class="tag">Storytelling</span></div></div>
@@ -992,12 +995,12 @@ body::selection{background:var(--purple);color:#fff}
       images:[
         {
           type:'image',
-          src: 'img/tournage.HEIC',
+          src: 'img/tournage.jpg',
           label:'Visuel du podcast Art&fact'
         },
         {
           type:'image',
-          src: 'img/tournage2.HEIC',
+          src: 'img/tournage2.jpg',
           label:'Visuel du podcast Art&fact'
         },
 
@@ -1030,8 +1033,8 @@ body::selection{background:var(--purple);color:#fff}
   kicker: 'Audiovisuel · Publicité',
 
   images:[
-        'img/mixeur2.HEIC',
-        'img/mixeur1.HEIC'
+        'img/mixeur2.jpg',
+        'img/mixeur1.jpg'
       ],
 
   lead: 'Publicité audiovisuelle pour promouvoir le mixeur NovaCook à travers une histoire de couple mêlant cuisine, simplicité et émotion.',
@@ -1125,6 +1128,7 @@ body::selection{background:var(--purple);color:#fff}
     const isVideo = item && typeof item === 'object' && item.type === 'video';
     const src = typeof item === 'string' ? item : item.src;
     const label = typeof item === 'string' ? '' : (item.label || '');
+    const isPdf = typeof src === 'string' && src.toLowerCase().split('?')[0].endsWith('.pdf');
 
     // On remplace le contenu de la zone média pour pouvoir afficher
     // soit une image, soit directement la vidéo YouTube.
@@ -1133,12 +1137,14 @@ body::selection{background:var(--purple);color:#fff}
 
     let media = gallery.querySelector('#modal-image, .gallery-video');
 
-    if(isVideo){
+    if(isVideo || isPdf){
       if(media) media.remove();
 
-      const video = document.createElement('div');
-      video.className = 'gallery-video';
-      video.innerHTML = `
+      const documentFrame = document.createElement('div');
+      documentFrame.className = 'gallery-video';
+      documentFrame.innerHTML = isPdf ? `
+        <iframe src="${src}" title="${label || 'Document du projet'}"></iframe>
+      ` : `
         <iframe
           src="${src}"
           title="${label || 'Vidéo du projet'}"
@@ -1147,7 +1153,7 @@ body::selection{background:var(--purple);color:#fff}
         </iframe>
       `;
 
-      gallery.insertBefore(video, gallery.querySelector('.gallery-next'));
+      gallery.insertBefore(documentFrame, gallery.querySelector('.gallery-next'));
     }else{
       if(media && media.classList.contains('gallery-video')){
         media.remove();
